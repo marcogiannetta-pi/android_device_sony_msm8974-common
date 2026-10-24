@@ -34,7 +34,8 @@ PRODUCT_ENFORCE_RRO_TARGETS := \
 # Audio
 PRODUCT_PACKAGES += \
     android.hardware.audio@2.0-impl \
-    android.hardware.audio.effect@2.0-impl
+    android.hardware.audio.effect@2.0-impl \
+    android.hardware.audio.service
 
 PRODUCT_PACKAGES += \
     audio.r_submix.default \
@@ -58,6 +59,7 @@ PRODUCT_PACKAGES += \
 # Camera
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
+    android.hardware.camera.provider@2.4-service \
     camera.device@1.0-impl
 
 PRODUCT_PACKAGES += \
