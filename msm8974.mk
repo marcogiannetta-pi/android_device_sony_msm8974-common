@@ -38,7 +38,6 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     audio.a2dp.default \
-    audio.primary.msm8974 \
     audio.r_submix.default \
     audio.usb.default
 
@@ -66,9 +65,6 @@ PRODUCT_PACKAGES += \
     camera.qcom \
     libshims_signal
 
-PRODUCT_PACKAGES += \
-    Snap
-
 # Display
 PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator@2.0-impl \
@@ -81,7 +77,6 @@ PRODUCT_PACKAGES += \
     hwcomposer.msm8974 \
     gralloc.msm8974 \
     memtrack.msm8974 \
-    libgenlock \
     libmemalloc \
     liboverlay \
     libqdutils
@@ -183,10 +178,6 @@ PRODUCT_PACKAGES += \
     android.hardware.power-service-qti
 
 # RIL
-PRODUCT_PACKAGES += \
-    android.hardware.radio@1.0-impl \
-    android.hardware.radio.deprecated@1.0-impl
-
 PRODUCT_PACKAGES += \
     libaudioclient_shim
 
