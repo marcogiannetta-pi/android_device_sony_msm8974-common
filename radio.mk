@@ -2,6 +2,8 @@
 PRODUCT_PROPERTY_OVERRIDES += \
     rild.libargs=-d[SPACE]/dev/smd0 \
     rild.libpath=/system/vendor/lib/libril-qc-qmi-1.so \
+    vendor.rild.libargs=-d[SPACE]/dev/smd0 \
+    vendor.rild.libpath=/system/vendor/lib/libril-qc-qmi-1.so \
     ril.subscription.types=NV,RUIM \
     ro.ril.enable.amr.wideband=1
 
