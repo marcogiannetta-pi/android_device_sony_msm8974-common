@@ -258,7 +258,7 @@ static char *camera_fixup_getparams(int __attribute__((unused)) id,
     }
 
     String8 strParams = params.flatten();
-    char *ret = strdup(strParams.string());
+    char *ret = strdup(strParams.c_str());
 
     ALOGV("%s: get parameters fixed up", __FUNCTION__);
     return ret;
@@ -341,7 +341,7 @@ static char *camera_fixup_setparams(int __attribute__((unused)) id,
 #endif
 
     String8 strParams = params.flatten();
-    char *ret = strdup(strParams.string());
+    char *ret = strdup(strParams.c_str());
 
     ALOGV("%s: fixed parameters:", __FUNCTION__);
     return ret;
