@@ -730,11 +730,7 @@ done:
 
 static bool can_talk_to_sensormanager()
 {
-    android::SensorManager& sensorManager(
-            android::SensorManager::getInstanceForPackage(
-                android::String16("camera")));
-    android::Sensor const * const * sensorList;
-    return sensorManager.getSensorList(&sensorList) >= 0;
+    return true;
 }
 
 /*******************************************************************
@@ -884,8 +880,22 @@ static int camera_get_camera_info(int camera_id, struct camera_info *info)
 {
     ALOGV("%s", __FUNCTION__);
 
-    if (check_vendor_module())
-        return 0;
+    if (!info)
+        return -EINVAL;
 
-    return gVendorModule->get_camera_info(camera_id, info);
+    if (check_vendor_module())
+        return -ENODEV;
+
+    int ret = gVendorModule->get_camera_info(camera_id, info);
+    // Explicitly enforce correct orientation and facing for Xperia Z3 Compact (msm8974)
+    if (camera_id == 0) {
+        info->facing = CAMERA_FACING_BACK;
+        info->orientation = 90;
+    } else if (camera_id == 1) {
+        info->facing = CAMERA_FACING_FRONT;
+        info->orientation = 270;
+    }
+    ALOGI("%s: camera %d facing=%d orientation=%d (ret=%d)",
+          __FUNCTION__, camera_id, info->facing, info->orientation, ret);
+    return ret;
 }
