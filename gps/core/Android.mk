@@ -37,7 +37,7 @@ LOCAL_C_INCLUDES:= \
     $(TARGET_OUT_HEADERS)/gps.utils \
     $(TARGET_OUT_HEADERS)/libflp
 
-LOCAL_HEADER_LIBRARIES := libgps.utils_headers
+LOCAL_HEADER_LIBRARIES := libgps.utils_headers libhardware_headers
 
 include $(BUILD_SHARED_LIBRARY)
 

@@ -50,7 +50,7 @@ LOCAL_C_INCLUDES:= \
     $(LOCAL_PATH) \
     $(TARGET_OUT_HEADERS)/libflp
 
-LOCAL_HEADER_LIBRARIES := libgps.utils_headers libloc_core_headers
+LOCAL_HEADER_LIBRARIES := libgps.utils_headers libloc_core_headers libhardware_headers
 
 include $(BUILD_SHARED_LIBRARY)
 
@@ -96,6 +96,6 @@ LOCAL_C_INCLUDES:= \
 
 LOCAL_MODULE_RELATIVE_PATH := hw
 
-LOCAL_HEADER_LIBRARIES := libgps.utils_headers libloc_core_headers
+LOCAL_HEADER_LIBRARIES := libgps.utils_headers libloc_core_headers libhardware_headers
 
 include $(BUILD_SHARED_LIBRARY)
