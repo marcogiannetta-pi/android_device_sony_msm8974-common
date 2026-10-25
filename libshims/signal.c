@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "signal.h"
+#include <signal.h>
 
 sighandler_t bsd_signal(int signum, sighandler_t handler) {
    return signal(signum, handler);
