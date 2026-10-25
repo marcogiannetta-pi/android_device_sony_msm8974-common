@@ -16,6 +16,7 @@ LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := lights.c
+LOCAL_HEADER_LIBRARIES := libhardware_headers
 LOCAL_SHARED_LIBRARIES := liblog
 LOCAL_MODULE := lights.msm8974
 LOCAL_MODULE_TAGS := optional
