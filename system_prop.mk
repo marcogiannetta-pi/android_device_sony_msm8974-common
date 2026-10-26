@@ -80,7 +80,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # OpenGL ES 3.0
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.opengles.version=196608
+    ro.opengles.version=196608 \
+    ro.hardware.egl=adreno
 
 # Storage & USB OTG
 PRODUCT_PROPERTY_OVERRIDES += \
