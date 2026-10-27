@@ -29,7 +29,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # CameraAV MM HAL1 hacks
 PRODUCT_PROPERTY_OVERRIDES += \
     media.stagefright.legacyencoder=true \
-    media.stagefright.less-secure=true
+    media.stagefright.less-secure=true \
+    media.stagefright.record-yuv=true
 
 # Charger
 PRODUCT_PROPERTY_OVERRIDES += \
