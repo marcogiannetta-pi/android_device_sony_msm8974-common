@@ -28,6 +28,10 @@
 #define LOG_TAG "CameraWrapper"
 #include <log/log.h>
 
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+
 #include <hardware/hardware.h>
 #include <hardware/camera.h>
 #include <sensor/SensorManager.h>
@@ -78,6 +82,43 @@ static int camera_get_camera_info(int camera_id, struct camera_info *info);
 static int camera_send_command(struct camera_device * device, int32_t cmd,
         int32_t arg1, int32_t arg2);
 
+static const camera_module_callbacks_t *gModuleCallbacks = NULL;
+
+static int camera_module_set_callbacks(const camera_module_callbacks_t *callbacks)
+{
+    ALOGI("%s: callbacks=%p", __FUNCTION__, callbacks);
+    gModuleCallbacks = callbacks;
+    if (gModuleCallbacks && gModuleCallbacks->torch_mode_status_change) {
+        gModuleCallbacks->torch_mode_status_change(gModuleCallbacks, "0", TORCH_MODE_STATUS_AVAILABLE_OFF);
+    }
+    return 0;
+}
+
+static int camera_set_torch_mode(const char* camera_id, bool enabled)
+{
+    ALOGI("%s: camera_id=%s enabled=%d", __FUNCTION__, camera_id ? camera_id : "null", enabled);
+    if (!camera_id)
+        return -EINVAL;
+
+    if (strcmp(camera_id, "0") != 0)
+        return -EINVAL;
+
+    int fd = open("/sys/devices/pm8941-flash-38/mode", O_WRONLY);
+    if (fd < 0) {
+        ALOGE("%s: failed to open flash mode sysfs: %s", __FUNCTION__, strerror(errno));
+        return -errno;
+    }
+    const char *val = enabled ? "2" : "0";
+    write(fd, val, 1);
+    close(fd);
+
+    if (gModuleCallbacks && gModuleCallbacks->torch_mode_status_change) {
+        gModuleCallbacks->torch_mode_status_change(gModuleCallbacks, camera_id,
+                enabled ? TORCH_MODE_STATUS_AVAILABLE_ON : TORCH_MODE_STATUS_AVAILABLE_OFF);
+    }
+    return 0;
+}
+
 static struct hw_module_methods_t camera_module_methods = {
     .open = camera_device_open
 };
@@ -85,7 +126,7 @@ static struct hw_module_methods_t camera_module_methods = {
 camera_module_t HAL_MODULE_INFO_SYM = {
     .common = {
          .tag = HARDWARE_MODULE_TAG,
-         .module_api_version = CAMERA_MODULE_API_VERSION_1_0,
+         .module_api_version = CAMERA_MODULE_API_VERSION_2_4,
          .hal_api_version = HARDWARE_HAL_API_VERSION,
          .id = CAMERA_HARDWARE_MODULE_ID,
          .name = "Xperia Camera Wrapper",
@@ -96,10 +137,10 @@ camera_module_t HAL_MODULE_INFO_SYM = {
     },
     .get_number_of_cameras = camera_get_number_of_cameras,
     .get_camera_info = camera_get_camera_info,
-    .set_callbacks = NULL, /* remove compilation warnings */
+    .set_callbacks = camera_module_set_callbacks,
     .get_vendor_tag_ops = NULL, /* remove compilation warnings */
     .open_legacy = NULL, /* remove compilation warnings */
-    .set_torch_mode = NULL, /* remove compilation warnings */
+    .set_torch_mode = camera_set_torch_mode,
     .init = NULL, /* remove compilation warnings */
     .reserved = { 0 }, /* remove compilation warnings */
 };
@@ -720,6 +761,17 @@ static int camera_device_close(hw_device_t *device)
     if (wrapper_dev->base.ops)
         free(wrapper_dev->base.ops);
 
+    if (wrapper_dev->id == 0) {
+        int fd = open("/sys/devices/pm8941-flash-38/mode", O_WRONLY);
+        if (fd >= 0) {
+            write(fd, "0", 1);
+            close(fd);
+        }
+        if (gModuleCallbacks && gModuleCallbacks->torch_mode_status_change) {
+            gModuleCallbacks->torch_mode_status_change(gModuleCallbacks, "0", TORCH_MODE_STATUS_AVAILABLE_OFF);
+        }
+    }
+
     free(wrapper_dev);
 
 done:
@@ -846,6 +898,12 @@ static int camera_device_open(const hw_module_t *module, const char *name,
 
     *device = &camera_device->base.common;
 
+    if (camera_device->id == 0) {
+        if (gModuleCallbacks && gModuleCallbacks->torch_mode_status_change) {
+            gModuleCallbacks->torch_mode_status_change(gModuleCallbacks, "0", TORCH_MODE_STATUS_NOT_AVAILABLE);
+        }
+    }
+
     ALOGI("%s: camera device with id %d opened", __FUNCTION__,
             camera_device->id);
 
@@ -887,6 +945,8 @@ static int camera_get_camera_info(int camera_id, struct camera_info *info)
         return -ENODEV;
 
     int ret = gVendorModule->get_camera_info(camera_id, info);
+    info->device_version = CAMERA_DEVICE_API_VERSION_1_0;
+    info->static_camera_characteristics = NULL;
     // Explicitly enforce correct orientation and facing for Xperia Z3 Compact (msm8974)
     if (camera_id == 0) {
         info->facing = CAMERA_FACING_BACK;
