@@ -19,7 +19,11 @@ $(ramdisk_init_real): $(ramdisk_init) $(TARGET_OUT_EXECUTABLES)/toybox-static32 
 	  mv $(ramdisk_init) $(ramdisk_init_real); \
 	  ln -s /bin/init_sony $(ramdisk_init); \
 	else \
+	  if [ -f $(PRODUCT_OUT)/obj/EXECUTABLES/init_first_stage_intermediates/init ]; then \
+	    cp -f $(PRODUCT_OUT)/obj/EXECUTABLES/init_first_stage_intermediates/init $(ramdisk_init_real); \
+	  fi; \
 	  echo "/init $(ramdisk_init) is already a symlink"; \
 	fi
+	chmod 0755 $(ramdisk_init_real)
 
 ALL_DEFAULT_INSTALLED_MODULES += $(ramdisk_init_real)

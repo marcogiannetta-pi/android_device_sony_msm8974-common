@@ -36,6 +36,7 @@ LOCAL_CFLAGS += \
     -fno-short-enums \
     -D_ANDROID_ \
     -Wno-format \
+    -Wno-format-insufficient-args \
     -Wno-mismatched-tags \
     -Wno-null-conversion \
     -Wno-reorder \
@@ -85,6 +86,7 @@ LOCAL_CFLAGS += \
     -fno-short-enums \
     -D_ANDROID_ \
     -Wno-format \
+    -Wno-format-insufficient-args \
     -Wno-mismatched-tags \
     -Wno-unused-parameter
 

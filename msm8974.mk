@@ -97,8 +97,8 @@ PRODUCT_PACKAGES += \
 
 # GPS
 PRODUCT_PACKAGES += \
-    android.hardware.gnss@1.0-impl.legacy \
-    android.hardware.gnss@1.0-service.legacy \
+    android.hardware.gnss@1.0-impl \
+    android.hardware.gnss@1.0-service \
     gps.msm8974
 
 PRODUCT_COPY_FILES += \
@@ -211,12 +211,11 @@ PRODUCT_PACKAGES += \
     android.hardware.vibrator@1.0-service
 
 # VNDK
-PRODUCT_COPY_FILES += \
-    prebuilts/vndk/v29/arm/arch-arm-armv7-a-neon/shared/vndk-core/libprotobuf-cpp-lite.so:$(TARGET_COPY_OUT_VENDOR)/lib/libprotobuf-cpp-lite-v29.so
+# Handled by prebuilts/vndk/v29 snapshot
 
 # Wifi
 PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service.legacy
+    android.hardware.wifi-service
 
 PRODUCT_PACKAGES += \
     libwpa_client \

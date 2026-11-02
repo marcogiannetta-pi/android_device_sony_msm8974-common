@@ -13,3 +13,7 @@ type thermanager_exec, exec_type, file_type;
 # TimeKeep
 type timekeep, domain;
 type timekeep_exec, exec_type, file_type;
+
+# Legacy sysfs
+type sysfs_disk_stat, fs_type, sysfs_type;
+
