@@ -105,7 +105,7 @@ TARGET_LD_SHIM_LIBS := \
     /system/vendor/bin/suntrold|/system/vendor/lib/libshims_signal.so \
     /system/lib/hw/camera.vendor.qcom.so|libsensor.so \
     /system/lib/libcammw.so|libsensor.so \
-    /system/vendor/lib/libril-qc-qmi-1.so|libaudioclient_shim.so
+    /system/vendor/lib/libril-qc-qmi-1.so|libril_shim.so
 
 # SODP build barrier
 PRODUCT_PLATFORM_SOD := true
@@ -114,5 +114,6 @@ PRODUCT_PLATFORM_SOD := true
 DEVICE_MANIFEST_FILE := $(PLATFORM_PATH)/manifest.xml
 BOARD_KERNEL_SEPARATED_DTB := false
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+BUILD_BROKEN_PREBUILT_ELF_FILES := true
 BOARD_KERNEL_SEPARATED_DTB := false
 BOARD_KERNEL_HEADER_TARGET := 

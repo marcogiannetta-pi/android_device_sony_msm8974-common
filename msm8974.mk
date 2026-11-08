@@ -31,6 +31,8 @@ endif
 PRODUCT_ENFORCE_RRO_TARGETS := \
     framework-res
 
+PRODUCT_IGNORE_CHECK_VINTF_COMPAT_ERRORS := true
+
 # Audio
 PRODUCT_PACKAGES += \
     android.hardware.audio@2.0-impl \
@@ -135,7 +137,7 @@ PRODUCT_PACKAGES += \
 
 # LiveDisplay
 PRODUCT_PACKAGES += \
-    vendor.lineage.livedisplay@2.0-service-sysfs
+    vendor.lineage.livedisplay-service.sysfs
 
 # Media profile
 PRODUCT_COPY_FILES += \
@@ -180,7 +182,9 @@ PRODUCT_PACKAGES += \
 
 # RIL
 PRODUCT_PACKAGES += \
-    libaudioclient_shim
+    libril_shim \
+    libsqlite.vendor \
+    libmedia.vendor
 
 # Seccomp
 PRODUCT_COPY_FILES += \
@@ -190,7 +194,8 @@ PRODUCT_COPY_FILES += \
 # Sensors
 PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-impl \
-    android.hardware.sensors@1.0-service
+    android.hardware.sensors@1.0-service \
+    libpower.vendor
 
 # Thermal management
 PRODUCT_PACKAGES += \
@@ -207,8 +212,7 @@ PRODUCT_PACKAGES += \
 
 # Vibrator
 PRODUCT_PACKAGES += \
-    android.hardware.vibrator@1.0-impl \
-    android.hardware.vibrator@1.0-service
+    android.hardware.vibrator-service.legacy
 
 # VNDK
 # Handled by prebuilts/vndk/v29 snapshot

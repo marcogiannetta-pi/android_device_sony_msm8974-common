@@ -34,11 +34,8 @@
 
 #include <hardware/hardware.h>
 #include <hardware/camera.h>
-#include <sensor/SensorManager.h>
 #include <utils/threads.h>
 #include <utils/String8.h>
-
-#include <camera/Camera.h>
 #include <camera/CameraParameters.h>
 
 using namespace android;
@@ -298,6 +295,15 @@ static char *camera_fixup_getparams(int __attribute__((unused)) id,
         }
     }
 
+    params.set(CameraParameters::KEY_VIDEO_STABILIZATION_SUPPORTED, "false");
+    params.set(CameraParameters::KEY_VIDEO_STABILIZATION, "false");
+    params.set(CameraParameters::KEY_MAX_NUM_DETECTED_FACES_HW, 0);
+    params.set(CameraParameters::KEY_MAX_NUM_DETECTED_FACES_SW, 0);
+    params.remove(KEY_SONY_IMAGE_STABILISER);
+    params.remove(KEY_SONY_VIDEO_STABILISER);
+    params.remove(KEY_SONY_IMAGE_STABILISER_VALUES);
+    params.remove(KEY_SONY_VIDEO_STABILISER_VALUES);
+
     String8 strParams = params.flatten();
     char *ret = strdup(strParams.c_str());
 
@@ -305,7 +311,7 @@ static char *camera_fixup_getparams(int __attribute__((unused)) id,
     return ret;
 }
 
-static char *camera_fixup_setparams(int __attribute__((unused)) id,
+static char *camera_fixup_setparams(int id,
         const char *settings)
 {
     CameraParameters params;
@@ -347,34 +353,21 @@ static char *camera_fixup_setparams(int __attribute__((unused)) id,
         }
     }
 
-    if (params.get(CameraParameters::KEY_SCENE_MODE)) {
-        const char *sceneMode = params.get(
-                CameraParameters::KEY_SCENE_MODE);
-        if (strcmp(sceneMode, "hdr") == 0) {
-            params.set(KEY_SONY_IMAGE_STABILISER, VALUE_SONY_STILL_HDR);
-            params.set(CameraParameters::KEY_SCENE_MODE,
-                    CameraParameters::SCENE_MODE_AUTO);
-        } else {
-            params.set(KEY_SONY_IMAGE_STABILISER, VALUE_SONY_ON);
-        }
-    }
-
     if (params.get(KEY_SONY_VIDEO_HDR) && params.get("video-hdr")) {
         params.set(KEY_SONY_VIDEO_HDR, params.get("video-hdr"));
     }
 
-    if (params.get(CameraParameters::KEY_RECORDING_HINT) &&
-            strcmp(params.get(CameraParameters::KEY_RECORDING_HINT),
-            CameraParameters::TRUE) == 0) {
-        if (params.get(KEY_SONY_VIDEO_STABILISER_VALUES) &&
-                (strstr(params.get(KEY_SONY_VIDEO_STABILISER_VALUES),
-                    VALUE_SONY_INTELLIGENT_ACTIVE) != NULL) ) {
-            params.set(KEY_SONY_VIDEO_STABILISER,
-                    VALUE_SONY_INTELLIGENT_ACTIVE);
-        } else {
-            params.set(KEY_SONY_VIDEO_STABILISER, VALUE_SONY_OFF);
-        }
-        params.set(KEY_SONY_IMAGE_STABILISER, VALUE_SONY_OFF);
+    params.set(CameraParameters::KEY_VIDEO_STABILIZATION, "false");
+    params.remove(KEY_SONY_IMAGE_STABILISER);
+    params.remove(KEY_SONY_VIDEO_STABILISER);
+    params.remove(KEY_SONY_IMAGE_STABILISER_VALUES);
+    params.remove(KEY_SONY_VIDEO_STABILISER_VALUES);
+
+    if (id != 0) {
+        params.remove(KEY_SONY_VIDEO_HDR);
+        params.remove(KEY_SONY_ISO_MODE);
+        params.remove(KEY_SONY_AE_MODE);
+        params.remove("sony-shutter-speed");
     }
 
 #if defined(LOG_PARAMETERS)
