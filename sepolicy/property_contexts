@@ -1,2 +1,5 @@
 # Timekeep
 persist.vendor.timeadjust     u:object_r:vendor_timekeep_prop:s0
+
+# SSR
+persist.vendor.ssr.           u:object_r:vendor_ssr_prop:s0

@@ -131,8 +131,7 @@ PRODUCT_PACKAGES += \
 
 # Lights
 PRODUCT_PACKAGES += \
-    android.hardware.light@2.0-impl \
-    android.hardware.light@2.0-service \
+    android.hardware.light-service.lineage \
     lights.msm8974
 
 # LiveDisplay
@@ -147,8 +146,7 @@ PRODUCT_COPY_FILES += \
 
 # Memtrack
 PRODUCT_PACKAGES += \
-    android.hardware.memtrack@1.0-impl \
-    android.hardware.memtrack@1.0-service
+    android.hardware.memtrack-service.example
 
 # Net
 PRODUCT_PACKAGES += \
