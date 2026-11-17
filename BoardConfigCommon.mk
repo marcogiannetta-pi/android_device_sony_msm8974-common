@@ -116,4 +116,7 @@ BOARD_KERNEL_SEPARATED_DTB := false
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 BUILD_BROKEN_PREBUILT_ELF_FILES := true
 BOARD_KERNEL_SEPARATED_DTB := false
-BOARD_KERNEL_HEADER_TARGET := 
+BOARD_KERNEL_HEADER_TARGET :=
+
+# Graphics / Legacy Gralloc
+$(call soong_config_set_bool,libui,legacy_gralloc,true)
